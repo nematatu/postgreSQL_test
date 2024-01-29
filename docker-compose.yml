@@ -1,0 +1,30 @@
+version: '3'
+services:
+  python3:
+    restart: always
+    build: ./opt/spotify/
+    container_name: 'python3'
+    working_dir: '/root/'
+    tty: true
+    volumes:
+      - ./opt:/root/opt
+    networks:
+      - sptodb
+  db:
+    image: postgres:14
+    container_name: postgres_pta
+    build: ./opt/db/
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'postgres'
+    networks:
+      - sptodb
+volumes:
+  db-store:
+networks:
+  sptodb:
+    external: true  
